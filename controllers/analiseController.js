@@ -7,6 +7,7 @@ export async function processarFormulario(req, res) {
         const dados = req.body;
         const textoIA = await gerarAnaliseIA(dados);
         const nomeArquivo = gerarPDF(dados, textoIA);
+
         const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
         const caminhoPDF = `${BASE_URL}/relatorios/${nomeArquivo}`;
 
@@ -23,6 +24,7 @@ export async function processarFormulario(req, res) {
                 caminhoPDF,
             ]
         );
+
         res.json({
             message: "Relatório gerado com sucesso!",
             analise: textoIA,
@@ -37,11 +39,18 @@ export async function processarFormulario(req, res) {
 export async function listarRelatorios(req, res) {
     try {
         const result = await pool.query(
-            "SELECT id, nome, tipo_usuario, data_criacao, pdf_path FROM relatorios ORDER BY data_criacao DESC"
+            `SELECT 
+                id, 
+                nome, 
+                tipo_usuario AS "tipoUsuario", 
+                data_criacao AS "data", 
+                pdf_path AS "pdf"
+             FROM relatorios
+             ORDER BY data_criacao DESC`
         );
         res.json(result.rows);
     } catch (err) {
-        console.error(err);
+        console.error("❌ Erro ao buscar relatórios:", err);
         res.status(500).json({ error: "Erro ao buscar relatórios" });
     }
 }
