@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 
 dotenv.config();
 const app = express();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -15,7 +16,7 @@ app.use(express.json());
 app.use("/api", analiseRoutes);
 app.use("/relatorios", express.static(path.join(__dirname, "relatorios")));
 app.get("/", (req, res) => {
-    res.send("✅ API do Sistema Inteligente de Análise Automatizada está online!");
+    res.send("✅ API do Sistema Inteligente está online!");
 });
 
 const PORT = process.env.PORT || 3000;
