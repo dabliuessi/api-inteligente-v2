@@ -33,3 +33,15 @@ export async function processarFormulario(req, res) {
         res.status(500).json({ error: "Erro ao processar formulário", err });
     }
 }
+
+export async function listarRelatorios(req, res) {
+    try {
+        const result = await pool.query(
+            "SELECT id, nome, tipo_usuario, data_criacao, pdf_path FROM relatorios ORDER BY data_criacao DESC"
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Erro ao buscar relatórios" });
+    }
+}
